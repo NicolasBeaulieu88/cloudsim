@@ -51,7 +51,7 @@ public class Labo3Part1Hiv2022 {
 
 
 				//Étape 5: Création des cloudlets (tâches à exécuter sur les VMs
-				cloudletList = createCloudlet(brokerId, NbCloudlets, 1); // creating 15 cloudlets
+				cloudletList = createCloudlet(brokerId, NbCloudlets, 1); // creating 30 cloudlets
 		
 				//soumettre les listes de cloudlets aux brokers
 				broker.submitCloudletList(cloudletList);
