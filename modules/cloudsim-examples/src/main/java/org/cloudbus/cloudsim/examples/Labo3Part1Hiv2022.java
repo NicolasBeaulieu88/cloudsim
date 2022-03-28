@@ -1,18 +1,17 @@
 package org.cloudbus.cloudsim.examples;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
+
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;
 	
 public class Labo3Part1Hiv2022 {
 		// la liste de cloudlets
@@ -43,7 +42,7 @@ public class Labo3Part1Hiv2022 {
 				// la première est associé au client 1 et la deuxième au client 2
 				vmlist = new ArrayList<Vm>();
 
-				vmlist = createVM(brokerId, 15, 1); 
+				vmlist = createVM(brokerId, 3, 1);
 
 
 				//soumettre les listes de VMs aux brokers
@@ -89,6 +88,8 @@ public class Labo3Part1Hiv2022 {
 			peList.add(new Pe(1, new PeProvisionerSimple(mips)));
 			peList.add(new Pe(2, new PeProvisionerSimple(mips)));
 			peList.add(new Pe(3, new PeProvisionerSimple(mips)));
+			peList.add(new Pe(4, new PeProvisionerSimple(mips)));
+			peList.add(new Pe(5, new PeProvisionerSimple(mips)));
 
 			//Création des hôtess et leur ajout dans la liste hostList
 
@@ -96,6 +97,7 @@ public class Labo3Part1Hiv2022 {
 			long storage = 1000000; 
 			int bw = 10000;
 
+			/*
 			for(int hostId=0;hostId<3;hostId++){
 				hostList.add(
 						new Host(
@@ -106,8 +108,21 @@ public class Labo3Part1Hiv2022 {
 							peList,
 							new VmSchedulerTimeShared(peList)
 							)
-		    	); 
+		    	);
 			}
+			 */
+
+			hostList.add(
+					new Host(
+							0,
+							new RamProvisionerSimple(ram),
+							new BwProvisionerSimple(bw),
+							storage,
+							peList,
+							//new VmSchedulerTimeShared(peList)
+							new VmSchedulerSpaceShared(peList)
+					)
+			);
 				
 				// Création du centre de données avec les caractéristiques suivantes
 			String arch = "x86";            // system architecture
@@ -149,17 +164,18 @@ public class Labo3Part1Hiv2022 {
 		private static List<Vm> createVM(int userId, int vms, int idShift) {
 			LinkedList<Vm> list = new LinkedList<Vm>();
 
-			long size = 10000; 
-			int ram = 1024; 
-			int mips = 250;
+			long size = 10000;
+			int ram = 1024;
+			int mips = 500;
 			long bw = 1000;
-			int pesNumber = 2; 
+			int pesNumber = 2;
 			String vmm = "Xen"; 
 
 			Vm[] vm = new Vm[vms];
 
 			for(int i=0;i<vms;i++){
-				vm[i] = new Vm(idShift + i, userId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerSpaceShared());
+				//vm[i] = new Vm(idShift + i, userId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerSpaceShared());
+				vm[i] = new Vm(idShift + i, userId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
 				list.add(vm[i]);
 			}
 				return list;
@@ -170,7 +186,7 @@ public class Labo3Part1Hiv2022 {
 			LinkedList<Cloudlet> list = new LinkedList<Cloudlet>();
 
 				//cloudlet parameters
-			long length = 1500;
+			long length = 2500;
 			long fileSize = 300;
 			long outputSize = 300;
 			int pesNumber = 1;
